@@ -102,7 +102,8 @@ expect 'missing compatible date exits three' 3 '' env PATH="$TMP/no-date" "$BASH
 expect 'version works without GNU date' 0 'epochutc 1.0.0' env PATH="$TMP/no-date" "$BASH_BIN" "$TOOL" --version
 printf '#!/bin/sh\nexit 1\n' > "$TMP/fallback/date"
 chmod 0755 "$TMP/fallback/date"
-ln -s "$DATE_BIN" "$TMP/fallback/gdate"
+printf '#!/bin/sh\nexec %q "$@"\n' "$DATE_BIN" > "$TMP/fallback/gdate"
+chmod 0755 "$TMP/fallback/gdate"
 expect 'gdate fallback' 0 '1970-01-01 00:00:00.000000 UTC' env PATH="$TMP/fallback" "$BASH_BIN" "$TOOL" 0
 
 printf '\nInstaller tests (temporary prefixes only)\n'
