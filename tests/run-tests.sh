@@ -192,9 +192,10 @@ check 'dependency failure creates no destination' test ! -e "$TMP/dependency-fai
 
 mkdir -p "$TMP/private-bin/bin"
 chmod 0700 "$TMP/private-bin/bin"
+private_bin_mode=$(stat -c '%a' "$TMP/private-bin/bin")
 run "$BASH_BIN" "$INSTALLER" --prefix "$TMP/private-bin"
 check 'installation into existing private bin succeeds' test "$RC" -eq 0
-check 'existing bin permissions are preserved' test "$(stat -c '%a' "$TMP/private-bin/bin")" = 700
+check 'existing bin permissions are preserved' test "$(stat -c '%a' "$TMP/private-bin/bin")" = "$private_bin_mode"
 
 printf '\nResults: %s passed; %s failed.\n' "$passed" "$failed"
 (( failed == 0 ))
